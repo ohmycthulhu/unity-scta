@@ -17,7 +17,11 @@ public class UIController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        _heightControlSlider.minValue  = Globals.minHeight;
+        _heightControlSlider.maxValue = Globals.maxHeight;
+
+        _speedControlSlider.minValue = Globals.minHorSpeed;
+        _speedControlSlider.maxValue = Globals.maxHorSpeed;
     }
 
     // Update is called once per frame

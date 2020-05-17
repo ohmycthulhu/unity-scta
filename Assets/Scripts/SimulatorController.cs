@@ -22,14 +22,6 @@ public class SimulatorController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {       
-        foreach (var planePosition in planes) {
-            var plane = Instantiate(planePrefab, planePosition.source, Quaternion.identity);
-            var c = plane.GetComponent<PlaneController>();
-            c.planePositions = planePosition;
-            c.mSpeed = Random.Range(1.0f, 3.0f);
-            c.uiController = uiController;
-            plane.transform.parent = this.transform;
-        }
 
         Vector3 p = viewCamera.ViewportToWorldPoint(viewCamera.transform.position);
         cameraRightBound = Mathf.Abs(p.x);
@@ -37,6 +29,9 @@ public class SimulatorController : MonoBehaviour
         cameraTopBound = Mathf.Abs(p.y);
         cameraBottomBound = -Mathf.Abs(p.y);
 
+        foreach (var planePosition in planes) {
+            GeneratePlane(planePosition);
+        }
 
         for (int i = 0; i < planesCount; i++) {
             GeneratePlane();
@@ -45,18 +40,27 @@ public class SimulatorController : MonoBehaviour
         StartCoroutine("GeneratePlanes");
     }
 
-    public void GeneratePlane() {
-        PlanePosition position = GenerateRandomTrack();
-        float speed = Random.Range(5.0f, 20.0f);
-        float verticalSpeed = Random.Range(.7f, 2.0f);
-        float height = Random.Range(1.0f, 15.0f);
+    public void GeneratePlane(PlanePosition p = null) {
+        // Get value if passed, otherwise generate
+        PlanePosition position = p != null ? p : GenerateRandomTrack();
+        
+        // Get random values
+        float speed = Random.Range(Globals.minHorSpeed, Globals.maxHorSpeed);
+        float verticalSpeed = Random.Range(Globals.minVerSpeed, Globals.maxVerSpeed);
+        float height = Random.Range(Globals.minHeight, Globals.maxHeight);
+
+        // Generate plane
         var plane = Instantiate(planePrefab, Vector3.zero, Quaternion.identity);
+
+        // Get controller and assign values
         var controller = plane.GetComponent<PlaneController>();
         controller.planePositions = position;
         controller.mSpeed = speed;
         controller.mDesiredHeight = height;
         controller.mVerticalSpeed = verticalSpeed;
         controller.uiController = uiController;
+
+        // Assign this as parent, so plane will be the child
         plane.transform.parent = this.transform;
     }
 

@@ -157,14 +157,18 @@ public class PlaneController : MonoBehaviour
         }
     }
 
+    private float FormatNumber(float f) {
+        return Mathf.Round(f * 100) / 100.0f;
+    }
+
     public float Height {
         get {
-            return Mathf.Round(mCurrentHeight * 100) / 100.0f;
+            return FormatNumber(mCurrentHeight);
         }
     }
     public float TargetHeight {
         get {
-            return Mathf.Round(mDesiredHeight * 100) / 100.0f;
+            return FormatNumber(mDesiredHeight);
         }
         set {
             mDesiredHeight = value;
@@ -173,7 +177,7 @@ public class PlaneController : MonoBehaviour
 
     public float Speed {
         get {
-            return Mathf.Round(mSpeed * 100) / 100.0f;
+            return FormatNumber(mSpeed);
         }
         set {
             mSpeed = value;
@@ -193,7 +197,7 @@ public class PlaneController : MonoBehaviour
 
 
 [System.Serializable]
-public struct PlanePosition {
+public class PlanePosition {
     public Vector3 source;
     public Vector3 destination;
 }
