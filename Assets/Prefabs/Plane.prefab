@@ -275,16 +275,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b787591bfee6cea73a3eb35e2616ecfd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  trajectoryLine: {fileID: 2687492799272765232}
+  trajectoryLine: {fileID: 2687492799272765233}
   informationHolder: {fileID: 1392152030}
   planePositions:
     source: {x: 0, y: 0, z: 0}
     destination: {x: 5, y: 5, z: 0}
   mSpeed: 1
-  mHeightSpeed: 0
+  mVerticalSpeed: 0
   mDesiredHeight: 0
   uiController: {fileID: 0}
   destroyOnDestination: 1
+  currentStatus: 4
 --- !u!61 &1135859732
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -335,13 +336,13 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2687492799272765235}
-  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 5}
   m_Children: []
   m_Father: {fileID: 2687492799184703941}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
@@ -389,6 +390,20 @@ LineRenderer:
   m_Positions:
   - {x: 0, y: 0, z: 0}
   - {x: 0, y: 0, z: 1}
+  - {x: 10.340492, y: -1.6213024, z: -25.020834}
+  - {x: 17.322292, y: 5.028032, z: -25.020834}
+  - {x: 26.077253, y: -2.50788, z: -25.020834}
+  - {x: 32.72659, y: 9.239277, z: -25.020834}
+  - {x: 36.93783, y: -2.8403473, z: -25.020834}
+  - {x: 42.2573, y: 9.571746, z: -25.020834}
+  - {x: 40.262505, y: -8.713925, z: -25.020834}
+  - {x: 15.216669, y: -4.6135025, z: -25.020834}
+  - {x: 24.636564, y: -5.3892584, z: -25.020834}
+  - {x: 20.314495, y: -7.162414, z: -25.020834}
+  - {x: 19.095448, y: -8.824747, z: -25.020834}
+  - {x: 22.309296, y: -7.605705, z: -25.020834}
+  - {x: 19.871202, y: -7.4948816, z: -25.020834}
+  - {x: 20.757786, y: -8.93557, z: -25.020834}
   m_Parameters:
     serializedVersion: 3
     widthMultiplier: 1
@@ -405,23 +420,14 @@ LineRenderer:
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
-        time: 0.7442393
-        value: 0.5938532
+        time: 0.41275162
+        value: 0.8367121
         inSlope: -1.4671204
         outSlope: -1.4671204
         tangentMode: 0
         weightedMode: 0
         inWeight: 0.33333334
         outWeight: 0.33333334
-      - serializedVersion: 3
-        time: 1
-        value: 0
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4

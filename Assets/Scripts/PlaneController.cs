@@ -27,12 +27,14 @@ public class PlaneController : MonoBehaviour
 
     private int myId;
 
-    public RectTransform trajectoryLine;
+    public LineRenderer trajectoryLine;
     public Text informationHolder;
     public PlanePosition planePositions;
     public float mSpeed, mVerticalSpeed;
     public float mDesiredHeight;
     private float mCurrentHeight;
+
+    public float _lineMaxLength = 6.0f;
 
     public UIController uiController;
 
@@ -90,7 +92,7 @@ public class PlaneController : MonoBehaviour
     private void MovePlane() {
         float step = Time.deltaTime * mSpeed;
 
-        // Move object toward the destionation and rotate toward it
+        // Move object toward the destionation
         transform.position = Vector3.MoveTowards(transform.position, planePositions.destination, step);
     }
 
@@ -106,11 +108,15 @@ public class PlaneController : MonoBehaviour
     }
 
     private void AdjustTrajectoryLine() {
-        float step = Time.deltaTime * mSpeed;
-        trajectoryLine.rotation = Quaternion.LookRotation(Vector3.RotateTowards(trajectoryLine.forward, planePositions.destination, step, 0.0f));        
+        // Get destination position relative to current position
+        Vector3 relativePosition = planePositions.destination - transform.position;
         
-        // Change the scale of trajectory line to match the distance to the destination 
-        trajectoryLine.localScale = new Vector3(3.0f, 3.0f, Mathf.Min((planePositions.destination - transform.position).magnitude / 2.0f, 3.0f));
+        // Set end of to the destination if length is lower than length max or if object is selected
+        Vector3 lineEnd = (currentStatus == Status.Selected || relativePosition.magnitude < _lineMaxLength)
+            ? relativePosition : (relativePosition.normalized * _lineMaxLength);
+
+        // Set end position
+        trajectoryLine.SetPosition(1, lineEnd / 2);
     }
 
     private void UpdateTexts() {
@@ -119,14 +125,21 @@ public class PlaneController : MonoBehaviour
     }
 
     private void SetColor() {
-        Color c = colors[currentStatus];
-        mSpriteRenderer.color = c;
-        informationHolder.color = c;
+        mSpriteRenderer.color = CurrentColor;
+        informationHolder.color = CurrentColor;
+        trajectoryLine.startColor = CurrentColor;
+        trajectoryLine.endColor = CurrentColor;
     }    
 
     public String Name {
         get {
             return $"Plane #{this.myId}";
+        }
+    }
+
+    private Color CurrentColor {
+        get {
+            return colors[currentStatus];
         }
     }
 
