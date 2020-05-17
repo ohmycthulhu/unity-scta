@@ -55,10 +55,14 @@ public class SimulatorController : MonoBehaviour
             destination = GenerateRandomPosition()
         };
         float speed = Random.Range(5.0f, 20.0f);
+        float verticalSpeed = Random.Range(.7f, 2.0f);
+        float height = Random.Range(1.0f, 15.0f);
         var plane = Instantiate(planePrefab, Vector3.zero, Quaternion.identity);
         var controller = plane.GetComponent<PlaneController>();
         controller.planePositions = position;
         controller.mSpeed = speed;
+        controller.mDesiredHeight = height;
+        controller.mVerticalSpeed = verticalSpeed;
         controller.uiController = uiController;
         plane.transform.parent = this.transform;
     }

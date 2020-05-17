@@ -30,7 +30,7 @@ public class PlaneController : MonoBehaviour
     public RectTransform trajectoryLine;
     public Text informationHolder;
     public PlanePosition planePositions;
-    public float mSpeed, mHeightSpeed;
+    public float mSpeed, mVerticalSpeed;
     public float mDesiredHeight;
     private float mCurrentHeight;
 
@@ -97,7 +97,7 @@ public class PlaneController : MonoBehaviour
     private void ChangeHeight() {
         // Move to minimum between altitude difference and actual travel distance
         float neededDHeight = mDesiredHeight - mCurrentHeight;
-        float speedH = Mathf.Sign(neededDHeight) * mHeightSpeed * Time.deltaTime;
+        float speedH = Mathf.Sign(neededDHeight) * mVerticalSpeed * Time.deltaTime;
         if (Mathf.Abs(neededDHeight) > Mathf.Abs(speedH)) {
             mCurrentHeight += speedH;
         } else {
@@ -132,7 +132,15 @@ public class PlaneController : MonoBehaviour
 
     public float Height {
         get {
-            return mCurrentHeight;
+            return Mathf.Round(mCurrentHeight * 100) / 100.0f;
+        }
+    }
+    public float TargetHeight {
+        get {
+            return Mathf.Round(mDesiredHeight * 100) / 100.0f;
+        }
+        set {
+            mDesiredHeight = value;
         }
     }
 
