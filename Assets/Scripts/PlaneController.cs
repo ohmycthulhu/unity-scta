@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using System;
 
 public class PlaneController : MonoBehaviour
 {
@@ -23,9 +22,16 @@ public class PlaneController : MonoBehaviour
         { Status.Normal, new Color(1, 1, 1, 1) },
     };
 
+    private static string[] availableNames = {
+        "THY",
+        "VV",
+        "AHY"
+    };
+
     private static int ID = 1;
 
     private int myId;
+    private string _name;
 
     public LineRenderer trajectoryLine;
     public Text informationHolder;
@@ -57,6 +63,7 @@ public class PlaneController : MonoBehaviour
         // Setup intial values
         transform.position = planePositions.source;
         mCurrentHeight = mDesiredHeight;
+        _name = GetRandomName();
         mSpriteRenderer = GetComponent<SpriteRenderer>();
     }
 
@@ -124,6 +131,13 @@ public class PlaneController : MonoBehaviour
         informationHolder.text = $"{Name}\nHeight: {Height}";
     }
 
+    private string GetRandomName() {
+        string code = availableNames[Random.Range(0, availableNames.Length)];
+        int number = Random.Range(100, 999);
+
+        return $"{code} {number}";
+    }
+
     private void SetColor() {
         mSpriteRenderer.color = CurrentColor;
         informationHolder.color = CurrentColor;
@@ -131,9 +145,9 @@ public class PlaneController : MonoBehaviour
         trajectoryLine.endColor = CurrentColor;
     }    
 
-    public String Name {
+    public string Name {
         get {
-            return $"Plane #{this.myId}";
+            return _name;
         }
     }
 
@@ -169,7 +183,7 @@ public class PlaneController : MonoBehaviour
 }
 
 
-[Serializable]
+[System.Serializable]
 public struct PlanePosition {
     public Vector3 source;
     public Vector3 destination;
