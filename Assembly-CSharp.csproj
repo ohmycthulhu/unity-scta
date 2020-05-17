@@ -45,6 +45,7 @@
     <ImplicitlyExpandDesignTimeFacades>false</ImplicitlyExpandDesignTimeFacades>
   </PropertyGroup>
   <ItemGroup>
+     <Compile Include="Assets\Scripts\CollisionDetector.cs" />
      <Compile Include="Assets\Scripts\PlaneController.cs" />
      <Compile Include="Assets\Scripts\SimulatorController.cs" />
      <Compile Include="Assets\Scripts\UIController.cs" />

@@ -171,6 +171,15 @@ public class PlaneController : MonoBehaviour
         }
     }
 
+    public float Speed {
+        get {
+            return Mathf.Round(mSpeed * 100) / 100.0f;
+        }
+        set {
+            mSpeed = value;
+        }
+    }
+
     void OnMouseDown() {
         if (uiController) {
             if (uiController.SelectedPlane == this) {

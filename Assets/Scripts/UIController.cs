@@ -12,6 +12,7 @@ public class UIController : MonoBehaviour
     public Canvas _planeInformationCanvas;
 
     public Slider _heightControlSlider;
+    public Slider _speedControlSlider;
 
     // Start is called before the first frame update
     void Start()
@@ -27,8 +28,10 @@ public class UIController : MonoBehaviour
             _planeInfomation.text = 
                 $"{_selectedPlane.Name}\n" +
                 $"Current Height: {_selectedPlane.Height}\n" +
-                $"Target Height: {_selectedPlane.TargetHeight}";
+                $"Target Height: {_selectedPlane.TargetHeight}\n" +
+                $"Speed: {_selectedPlane.Speed}";
             _selectedPlane.TargetHeight = _heightControlSlider.value;
+            _selectedPlane.Speed = _speedControlSlider.value;
         }
     }
 
@@ -43,6 +46,7 @@ public class UIController : MonoBehaviour
             if (_selectedPlane != null) {
                 _selectedPlane.currentStatus = PlaneController.Status.Selected;
                 _heightControlSlider.value = _selectedPlane.Height;
+                _speedControlSlider.value = _selectedPlane.Speed;
             }
         }
     }    
