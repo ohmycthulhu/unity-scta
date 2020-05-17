@@ -44,7 +44,6 @@ public class UIController : MonoBehaviour
                 _selectedPlane.currentStatus = PlaneController.Status.Selected;
                 _heightControlSlider.value = _selectedPlane.Height;
             }
-            Debug.Log($"You selected - {(value != null ? value.Name : "nothing")}");
         }
     }    
 }

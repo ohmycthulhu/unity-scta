@@ -45,15 +45,8 @@ public class SimulatorController : MonoBehaviour
         StartCoroutine("GeneratePlanes");
     }
 
-    private Vector3 GenerateRandomPosition() {
-        return new Vector3(Random.Range(cameraLeftBound, cameraRightBound), Random.Range(cameraBottomBound, cameraTopBound));
-    }
-
     public void GeneratePlane() {
-        PlanePosition position = new PlanePosition {
-            source = GenerateRandomPosition(),
-            destination = GenerateRandomPosition()
-        };
+        PlanePosition position = GenerateRandomTrack();
         float speed = Random.Range(5.0f, 20.0f);
         float verticalSpeed = Random.Range(.7f, 2.0f);
         float height = Random.Range(1.0f, 15.0f);
@@ -78,5 +71,43 @@ public class SimulatorController : MonoBehaviour
     void Update()
     {
         
+    }
+
+    Vector3 GetPointInArea(int code) {
+        float xMin, xMax;
+        float yMin, yMax;
+
+        if (code > 1) {
+            xMin = cameraLeftBound;
+            xMax = cameraRightBound;
+            if (code == 2) {
+                yMax = cameraBottomBound;
+                yMin = cameraBottomBound * 1.1f;
+            } else {
+                yMin = cameraTopBound;
+                yMax = cameraTopBound * 1.1f;
+            }
+        } else {
+            yMin = cameraBottomBound;
+            yMax = cameraTopBound;
+            if (code == 0) {
+                xMin = cameraLeftBound * 1.1f;
+                xMax = cameraLeftBound;
+            } else {
+                xMin = cameraRightBound;
+                xMax = cameraRightBound * 1.1f;
+            }
+        }
+        
+
+        return new Vector3(Random.Range(xMin, xMax), Random.Range(yMin, yMax));
+    }
+
+    PlanePosition GenerateRandomTrack() {
+        int sourcePos = (int)Random.Range(0, 3.99f);
+        return new PlanePosition{
+            source = GetPointInArea(sourcePos),
+            destination = GetPointInArea((sourcePos + 1) % 4)
+        };
     }
 }
