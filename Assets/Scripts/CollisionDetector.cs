@@ -75,7 +75,29 @@ public class CollisionDetector : MonoBehaviour
             newCollisionsList.Add(match != null ? match : collision);
         }
 
-        _possibleCollisions = newCollisionsList;
+        ClearCollisionsList();
+        SetCollisionsList(newCollisionsList);
+    }
+
+    private void ClearCollisionsList() {
+        foreach (var collision in _possibleCollisions) {
+            if (collision.first != null) {
+                collision.first.currentStatus = PlaneController.Status.Normal;
+            }
+            if (collision.second != null) {
+                collision.second.currentStatus = PlaneController.Status.Normal;
+            }
+        }
+    }
+
+    private void SetCollisionsList(List<PossibleCollision> collisions) {
+        _possibleCollisions = collisions;
+        
+        foreach (var collision in _possibleCollisions) {
+            PlaneController.Status status = collision.controlMode == ControlMode.TCAS ? PlaneController.Status.TCASControlled : PlaneController.Status.STCAControlled;
+            collision.first.currentStatus = status;
+            collision.second.currentStatus = status;
+        }
     }
 
     private PossibleCollision getExistingCollision(PossibleCollision collision) {
