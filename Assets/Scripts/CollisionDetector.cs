@@ -2,16 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CollisionDetector : MonoBehaviour
+public class CollisionDetector : IntervalWorkScript
 {
 
     public float maxSafeDistance = 10.0f;
     public float minSafeHeightDifference = 5.0f;
-
-    public float detectionTimePeriod = .1f;
-
-    private float lastDetectionTime = 0;
-
     private List<PossibleCollision> _possibleCollisions = new List<PossibleCollision>();
 
     // Start is called before the first frame update
@@ -21,19 +16,12 @@ public class CollisionDetector : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    protected override void UpdateAction()
     {
         DetectCollisions();
     }
 
-    void DetectCollisions() {
-        // Collision detection is quite expensive operation, so we reduce the amount of time it is calculated
-        float currentTime = Time.time;
-        if (currentTime - lastDetectionTime < detectionTimePeriod) {
-            return;
-        }
-        lastDetectionTime = currentTime;
-        
+    void DetectCollisions() {   
         // Get all planes
         GameObject[] objects = GameObject.FindGameObjectsWithTag("Plane");
 
@@ -90,11 +78,14 @@ public class CollisionDetector : MonoBehaviour
         }
     }
 
-    private void SetCollisionsList(List<PossibleCollision> collisions) {
+    public void SetCollisionsList(List<PossibleCollision> collisions, bool clear = false) {
+        if (clear) {
+            ClearCollisionsList();
+        }
         _possibleCollisions = collisions;
         
         foreach (var collision in _possibleCollisions) {
-            PlaneController.Status status = PlaneController.Status.NearCollision;
+            PlaneController.Status status = collision.ControlModeToStatus();
             collision.first.currentStatus = status;
             collision.second.currentStatus = status;
         }
@@ -122,7 +113,7 @@ public class CollisionDetector : MonoBehaviour
 
     public List<PossibleCollision> PossibleCollisions {
         get { return _possibleCollisions; }
-    } 
+    }
 }
 
 public enum ControlMode {
@@ -140,4 +131,15 @@ public class PossibleCollision{
     public float startTime;
 
     public ControlMode controlMode;
+
+    public PlaneController.Status ControlModeToStatus() {
+        switch (controlMode) {
+            case ControlMode.TCAS:
+                return PlaneController.Status.TCASControlled;
+            case ControlMode.STCA:
+                return PlaneController.Status.STCAControlled;
+            default:
+                return PlaneController.Status.NearCollision;
+        }
+    }
 }

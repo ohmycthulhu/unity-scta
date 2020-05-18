@@ -2,16 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TCASController : MonoBehaviour
+public class TCASController : IntervalWorkScript
 {
 
     public CollisionDetector _collisionDetector;
-    public float _timeStep = .4f;
     public float _speedStep = .3f;
     public float _heightStep = .5f;
     
-    private float _lastUpdateTime;
-
     // Start is called before the first frame update
     void Start()
     {
@@ -20,13 +17,7 @@ public class TCASController : MonoBehaviour
 
 
     // Late update is called after all updates are called
-    void LateUpdate() {
-        float currentTime = Time.time;
-        if (currentTime - _lastUpdateTime < _timeStep) {
-            return;
-        }
-        _lastUpdateTime = currentTime;
-
+    protected override void UpdateAction() {
         List<PossibleCollision> possibleCollisions = _collisionDetector.PossibleCollisions;
 
         foreach (var collision in possibleCollisions) {

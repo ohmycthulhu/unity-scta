@@ -46,8 +46,11 @@
   </PropertyGroup>
   <ItemGroup>
      <Compile Include="Assets\Scripts\CollisionDetector.cs" />
+     <Compile Include="Assets\Scripts\CollisionPreventionController.cs" />
      <Compile Include="Assets\Scripts\Globals.cs" />
+     <Compile Include="Assets\Scripts\IntervalWorkScript.cs" />
      <Compile Include="Assets\Scripts\PlaneController.cs" />
+     <Compile Include="Assets\Scripts\SCTAController.cs" />
      <Compile Include="Assets\Scripts\SimulatorController.cs" />
      <Compile Include="Assets\Scripts\TCASController.cs" />
      <Compile Include="Assets\Scripts\UIController.cs" />

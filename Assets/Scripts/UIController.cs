@@ -39,7 +39,6 @@ public class UIController : MonoBehaviour
             _controller.planeStatus.text = "Normal Status";
             _controller.planeStatus.color = Color.white;
         } else {
-            Debug.Log(_controller.plane.currentStatus);
             _controller.planeStatus.text = "Possible Collision!";
             _controller.planeStatus.color = Color.red;
         }        
@@ -59,11 +58,11 @@ public class UIController : MonoBehaviour
                 _controller.speedControlSlider.value = value.Speed;
             }
         }
-    }    
+    }
 }
 
 [System.Serializable]
-public struct UIPlaneController {
+public class UIPlaneController {
     [HideInInspector]
     public PlaneController plane;
     public Text planeName;

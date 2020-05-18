@@ -15,8 +15,8 @@ public class PlaneController : MonoBehaviour
     }
 
     private static Dictionary<Status, Color> colors = new Dictionary<Status, Color>() {
-        { Status.Selected, Color.magenta },
-        { Status.STCAControlled, Color.green },
+        { Status.Selected, Color.green },
+        { Status.STCAControlled, Color.magenta },
         { Status.NearCollision, Color.red },
         { Status.TCASControlled, Color.blue },
         { Status.Normal, Color.white },
