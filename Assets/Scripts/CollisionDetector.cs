@@ -50,7 +50,7 @@ public class CollisionDetector : MonoBehaviour
                             first = p1,
                             second = p2,
                             startTime = Time.time,
-                            controlMode = ControlMode.TCAS
+                            controlMode = ControlMode.None
                         }
                     );
                 }
@@ -94,7 +94,7 @@ public class CollisionDetector : MonoBehaviour
         _possibleCollisions = collisions;
         
         foreach (var collision in _possibleCollisions) {
-            PlaneController.Status status = collision.controlMode == ControlMode.TCAS ? PlaneController.Status.TCASControlled : PlaneController.Status.STCAControlled;
+            PlaneController.Status status = PlaneController.Status.NearCollision;
             collision.first.currentStatus = status;
             collision.second.currentStatus = status;
         }
@@ -127,7 +127,8 @@ public class CollisionDetector : MonoBehaviour
 
 public enum ControlMode {
     TCAS, // This mode is used for automated adjustments
-    STCA  // This mode is used to manuaaly control 
+    STCA, // This mode is used to manuaaly control,
+    None  // If plane is not controlled yet
 }
 
 [System.Serializable]

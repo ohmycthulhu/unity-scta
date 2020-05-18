@@ -15,11 +15,11 @@ public class PlaneController : MonoBehaviour
     }
 
     private static Dictionary<Status, Color> colors = new Dictionary<Status, Color>() {
-        { Status.Selected, new Color(0, 1, 0, 1) },
-        { Status.STCAControlled, new Color(1, 1, 0, 1) },
-        { Status.NearCollision, new Color(1, 0, 0, 1) },
-        { Status.TCASControlled, new Color(0, 0, 1, 1) },
-        { Status.Normal, new Color(1, 1, 1, 1) },
+        { Status.Selected, Color.magenta },
+        { Status.STCAControlled, Color.green },
+        { Status.NearCollision, Color.red },
+        { Status.TCASControlled, Color.blue },
+        { Status.Normal, Color.white },
     };
 
     private static string[] availableNames = {
@@ -32,6 +32,8 @@ public class PlaneController : MonoBehaviour
 
     private int myId;
     private string _name;
+
+    private bool _isSelected = false;
 
     public LineRenderer trajectoryLine;
     public Text informationHolder;
@@ -119,7 +121,7 @@ public class PlaneController : MonoBehaviour
         Vector3 relativePosition = planePositions.destination - transform.position;
         
         // Set end of to the destination if length is lower than length max or if object is selected
-        Vector3 lineEnd = (currentStatus == Status.Selected || relativePosition.magnitude < _lineMaxLength)
+        Vector3 lineEnd = (_isSelected || relativePosition.magnitude < _lineMaxLength)
             ? relativePosition : (relativePosition.normalized * _lineMaxLength);
 
         // Set end position
@@ -153,6 +155,9 @@ public class PlaneController : MonoBehaviour
 
     private Color CurrentColor {
         get {
+            if (_isSelected) {
+                return Color.green;
+            }
             return colors[currentStatus];
         }
     }
@@ -182,6 +187,11 @@ public class PlaneController : MonoBehaviour
         set {
             mSpeed = value;
         }
+    }
+
+    public bool IsSelected {
+        get { return _isSelected; }
+        set { _isSelected = value; }
     }
 
     void OnMouseDown() {
