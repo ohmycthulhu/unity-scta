@@ -8,7 +8,7 @@ public class SCTAController : IntervalWorkScript
     public CollisionDetector _collisionDetector;
     public UIPlaneController _firstPlaneController;
     public UIPlaneController _secondPlaneController;
-    public PossibleCollision _possibleCollision;
+    private PossibleCollision _possibleCollision;
 
     // Start is called before the first frame update
     void Start()
@@ -66,6 +66,8 @@ public class SCTAController : IntervalWorkScript
         if (collision == null || collision.controlMode == ControlMode.TCAS) {
             return;
         }
+
+        ClearSelection();
 
         // If control mode is None, then go to SCTA mode
         PossibleCollision collisionToSave = collision.controlMode == ControlMode.None ?

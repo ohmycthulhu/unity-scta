@@ -286,7 +286,7 @@ MonoBehaviour:
   mDesiredHeight: 10
   _lineMaxLength: 6
   uiController: {fileID: 0}
-  destroyOnDestination: 0
+  destroyOnDestination: 1
   currentStatus: 4
 --- !u!61 &1135859732
 BoxCollider2D:
@@ -390,9 +390,8 @@ LineRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Positions:
-  - {x: 1.0018368, y: 0.015386304, z: -16.933985}
-  - {x: 0.02614212, y: -0.023134153, z: -16.002605}
-  - {x: 0.8678316, y: 0.053382993, z: -16.002605}
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
   m_Parameters:
     serializedVersion: 3
     widthMultiplier: 1
