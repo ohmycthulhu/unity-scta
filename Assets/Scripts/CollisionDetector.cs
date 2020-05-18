@@ -4,9 +4,7 @@ using UnityEngine;
 
 public class CollisionDetector : IntervalWorkScript
 {
-
-    public float maxSafeDistance = 10.0f;
-    public float minSafeHeightDifference = 5.0f;
+    public Canvas ErrorMessagesCanvas;
     private List<PossibleCollision> _possibleCollisions = new List<PossibleCollision>();
 
     // Start is called before the first frame update
@@ -51,6 +49,17 @@ public class CollisionDetector : IntervalWorkScript
         // }
 
         UpdateCollisionsList(collisions);
+
+        ErrorMessagesCanvas.enabled = ShouldShowErrors();
+    }
+
+    private bool ShouldShowErrors() {
+        foreach (var collision in _possibleCollisions) {
+            if (collision.controlMode == ControlMode.None) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private void UpdateCollisionsList(List<PossibleCollision> collisions) {
@@ -59,12 +68,10 @@ public class CollisionDetector : IntervalWorkScript
         foreach (var collision in collisions) {
             // Check if it is already in collection
             PossibleCollision match = getExistingCollision(collision);
-            
             newCollisionsList.Add(match != null ? match : collision);
         }
 
-        ClearCollisionsList();
-        SetCollisionsList(newCollisionsList);
+        SetCollisionsList(newCollisionsList, true);
     }
 
     private void ClearCollisionsList() {
@@ -85,10 +92,53 @@ public class CollisionDetector : IntervalWorkScript
         _possibleCollisions = collisions;
         
         foreach (var collision in _possibleCollisions) {
-            PlaneController.Status status = collision.ControlModeToStatus();
-            collision.first.currentStatus = status;
-            collision.second.currentStatus = status;
+            UpdatePlaneStates(collision);
         }
+    }
+
+    private void UpdatePlaneStates(PossibleCollision c) {
+        PlaneController.Status status = c.ControlModeToStatus();
+        c.first.currentStatus = status;
+        c.second.currentStatus = status;
+    }
+
+    public PossibleCollision FindAndSetToSCTAMode (PossibleCollision collision) {
+        for (int i = 0; i < _possibleCollisions.Count; i++) {
+            if (_possibleCollisions[i].first == collision.first
+            && _possibleCollisions[i].second == collision.second) {
+                _possibleCollisions[i].SetControlMode(ControlMode.STCA);
+                UpdatePlaneStates(_possibleCollisions[i]);
+                return _possibleCollisions[i];
+            }
+        }
+        return null;
+    }
+
+    public PossibleCollision RemoveSTCAMode (PossibleCollision collision) {
+        if (collision == null) {
+            return null;
+        }
+
+        for (int i = 0; i < _possibleCollisions.Count; i++) {
+            if (_possibleCollisions[i].first == collision.first
+            && _possibleCollisions[i].second == collision.second
+            && _possibleCollisions[i].controlMode == ControlMode.STCA
+            ) {
+                _possibleCollisions[i].SetControlMode(ControlMode.None);
+                UpdatePlaneStates(_possibleCollisions[i]);
+                return _possibleCollisions[i];
+            }
+        }
+        return null;
+    }
+
+    public PossibleCollision FindCollision(PlaneController plane) {
+        foreach (PossibleCollision p in _possibleCollisions) {
+            if (p.first == plane || p.second == plane) {
+                return p;
+            }
+        }
+        return null;
     }
 
     private PossibleCollision getExistingCollision(PossibleCollision collision) {
@@ -102,17 +152,31 @@ public class CollisionDetector : IntervalWorkScript
 
     bool isDistanceSafe(PlaneController p1, PlaneController p2) {
         float distance = Vector3.Distance(p1.transform.position, p2.transform.position);
-        if (distance >= maxSafeDistance) {
+        if (distance >= Globals.minSafeDistance) {
             return true;
         }
 
         float heightDiff = Mathf.Abs(p1.Height - p2.Height);
 
-        return (new Vector2(heightDiff / minSafeHeightDifference, distance / maxSafeDistance)).magnitude >= 1.0f;
+        return (new Vector2(heightDiff / Globals.minSafeHeightDifference, distance / Globals.minSafeDistance)).magnitude >= 1.0f;
     }
 
     public List<PossibleCollision> PossibleCollisions {
         get { return _possibleCollisions; }
+    }
+
+    public bool IsCollisionValid(PossibleCollision collision) {
+        if (collision == null) {
+            return false;
+        }
+        // Check if collision exists in collection
+        foreach (var c in _possibleCollisions) {
+            // If exists, check the validity of presented mode
+            if (c.first == collision.first && c.second == collision.second) {
+                return c.controlMode == collision.controlMode;
+            }
+        }
+        return false;
     }
 }
 
@@ -132,7 +196,19 @@ public class PossibleCollision{
 
     public ControlMode controlMode;
 
+    public void SetControlMode (ControlMode mode) {
+        PlaneController.Status planeStatus = Globals.ControlModeToStatus[mode];
+        first.currentStatus = planeStatus;
+        second.currentStatus = planeStatus;
+        controlMode = mode;
+    }
+
     public PlaneController.Status ControlModeToStatus() {
+        if (first.currentStatus == PlaneController.Status.STCAControlled
+            || second.currentStatus == PlaneController.Status.STCAControlled
+        ) {
+            return PlaneController.Status.STCAControlled;
+        }
         switch (controlMode) {
             case ControlMode.TCAS:
                 return PlaneController.Status.TCASControlled;
@@ -140,6 +216,17 @@ public class PossibleCollision{
                 return PlaneController.Status.STCAControlled;
             default:
                 return PlaneController.Status.NearCollision;
+        }
+    }
+
+    public float Distance {
+        get {
+            if (first == null || second == null) {
+                return 0;
+            }
+            float heightDiffrence = second.Height - first.Height;
+            float flatDistance = Vector3.Distance(first.transform.position, second.transform.position);
+            return Globals.GetUniversalDistance(flatDistance, heightDiffrence);
         }
     }
 }

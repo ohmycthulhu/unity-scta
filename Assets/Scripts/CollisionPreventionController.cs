@@ -5,7 +5,6 @@ using UnityEngine;
 public class CollisionPreventionController : IntervalWorkScript
 {
 
-    public float _timeBeforeSwithToTCAS;
     public SCTAController _scta;
     public TCASController _tcas;
     public CollisionDetector _CollisionDetector;
@@ -24,18 +23,14 @@ public class CollisionPreventionController : IntervalWorkScript
 
         foreach (var collision in collisions) {
             // Determine the right control mode
-            ControlMode c = GetControlModeForCollision(collision);
-            collision.controlMode = c;
+            collision.controlMode = GetControlModeForCollision(collision);
         }
 
         _CollisionDetector.SetCollisionsList(collisions);
     }
 
     ControlMode GetControlModeForCollision(PossibleCollision collision) {
-        if (collision.controlMode == ControlMode.None) {
-            return ControlMode.STCA;
-        }
-        if (collision.controlMode == ControlMode.STCA && ShouldSwitchToTCAS(collision)) {
+        if (collision.controlMode != ControlMode.TCAS && ShouldSwitchToTCAS(collision)) {
             return ControlMode.TCAS;
         }
 
@@ -43,6 +38,6 @@ public class CollisionPreventionController : IntervalWorkScript
     }
 
     bool ShouldSwitchToTCAS(PossibleCollision collision) {
-        return Time.time - collision.startTime >= _timeBeforeSwithToTCAS;
+        return (Time.time - collision.startTime) >= Globals.TCASSwitchTime;
     }
 }

@@ -280,12 +280,13 @@ MonoBehaviour:
   planePositions:
     source: {x: 0, y: 0, z: 0}
     destination: {x: 5, y: 5, z: 0}
-  mSpeed: 1
-  mVerticalSpeed: 0
-  mDesiredHeight: 0
+  _sctaController: {fileID: 0}
+  mSpeed: 0
+  mVerticalSpeed: 5
+  mDesiredHeight: 10
   _lineMaxLength: 6
   uiController: {fileID: 0}
-  destroyOnDestination: 1
+  destroyOnDestination: 0
   currentStatus: 4
 --- !u!61 &1135859732
 BoxCollider2D:
@@ -389,22 +390,9 @@ LineRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Positions:
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 1}
-  - {x: 10.340492, y: -1.6213024, z: -25.020834}
-  - {x: 17.322292, y: 5.028032, z: -25.020834}
-  - {x: 26.077253, y: -2.50788, z: -25.020834}
-  - {x: 32.72659, y: 9.239277, z: -25.020834}
-  - {x: 36.93783, y: -2.8403473, z: -25.020834}
-  - {x: 42.2573, y: 9.571746, z: -25.020834}
-  - {x: 40.262505, y: -8.713925, z: -25.020834}
-  - {x: 15.216669, y: -4.6135025, z: -25.020834}
-  - {x: 24.636564, y: -5.3892584, z: -25.020834}
-  - {x: 20.314495, y: -7.162414, z: -25.020834}
-  - {x: 19.095448, y: -8.824747, z: -25.020834}
-  - {x: 22.309296, y: -7.605705, z: -25.020834}
-  - {x: 19.871202, y: -7.4948816, z: -25.020834}
-  - {x: 20.757786, y: -8.93557, z: -25.020834}
+  - {x: 1.0018368, y: 0.015386304, z: -16.933985}
+  - {x: 0.02614212, y: -0.023134153, z: -16.002605}
+  - {x: 0.8678316, y: 0.053382993, z: -16.002605}
   m_Parameters:
     serializedVersion: 3
     widthMultiplier: 1

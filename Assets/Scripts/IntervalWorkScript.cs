@@ -8,7 +8,7 @@ public abstract class IntervalWorkScript : MonoBehaviour
     private float _lastWorkTime = 0;
 
     // Update is called once per frame
-    void Update()
+    protected virtual void Update()
     {
         float currentTime = Time.time;
 

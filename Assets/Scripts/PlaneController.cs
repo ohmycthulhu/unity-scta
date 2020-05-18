@@ -38,6 +38,7 @@ public class PlaneController : MonoBehaviour
     public LineRenderer trajectoryLine;
     public Text informationHolder;
     public PlanePosition planePositions;
+    public SCTAController _sctaController;
     public float mSpeed, mVerticalSpeed;
     public float mDesiredHeight;
     private float mCurrentHeight;
@@ -76,6 +77,10 @@ public class PlaneController : MonoBehaviour
             return;
         }
         
+        if (ShouldEnableSCTA()) {
+            EnableSCTA();
+        }
+
         MovePlane();
 
         ChangeHeight();
@@ -128,6 +133,14 @@ public class PlaneController : MonoBehaviour
         trajectoryLine.SetPosition(1, lineEnd / 2);
     }
 
+    private void EnableSCTA() {
+        _sctaController.TakeControlOfCollision(this);
+    }
+
+    private bool ShouldEnableSCTA() {
+        return IsSelected && currentStatus == Status.NearCollision;
+    }
+
     private void UpdateTexts() {
         // Update information on text
         informationHolder.text = $"{Name}\nHeight: {Height}";
@@ -162,18 +175,15 @@ public class PlaneController : MonoBehaviour
         }
     }
 
-    private float FormatNumber(float f) {
-        return Mathf.Round(f * 100) / 100.0f;
-    }
 
     public float Height {
         get {
-            return FormatNumber(mCurrentHeight);
+            return Globals.FormatNumber(mCurrentHeight);
         }
     }
     public float TargetHeight {
         get {
-            return FormatNumber(mDesiredHeight);
+            return Globals.FormatNumber(mDesiredHeight);
         }
         set {
             mDesiredHeight = value;
@@ -182,7 +192,7 @@ public class PlaneController : MonoBehaviour
 
     public float Speed {
         get {
-            return FormatNumber(mSpeed);
+            return Globals.FormatNumber(mSpeed);
         }
         set {
             mSpeed = value;
@@ -191,7 +201,17 @@ public class PlaneController : MonoBehaviour
 
     public bool IsSelected {
         get { return _isSelected; }
-        set { _isSelected = value; }
+        set { 
+            _isSelected = value;
+            // If plane is in near-collision mode and user is selecting it,
+            if (value && ShouldEnableSCTA()) {
+                EnableSCTA();
+            }
+            if (!value) {
+                _sctaController.ClearSelection();
+            }
+            // Then it should go to SCTA control mode
+        }
     }
 
     void OnMouseDown() {

@@ -9,6 +9,8 @@ public class SimulatorController : MonoBehaviour
     
     public UIController uiController;
 
+    public SCTAController sctaController;
+
     public PlanePosition[] planes;
 
     public int planesCount = 0;
@@ -59,6 +61,7 @@ public class SimulatorController : MonoBehaviour
         controller.mDesiredHeight = height;
         controller.mVerticalSpeed = verticalSpeed;
         controller.uiController = uiController;
+        controller._sctaController = sctaController;
 
         // Assign this as parent, so plane will be the child
         plane.transform.parent = this.transform;

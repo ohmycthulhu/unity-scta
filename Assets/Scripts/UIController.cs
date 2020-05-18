@@ -7,35 +7,37 @@ public class UIController : MonoBehaviour
 {    
     public UIPlaneController _controller;
 
+    private bool shouldUpdateSliderValues = false;
+
     // Start is called before the first frame update
     void Start()
     {
-        _controller.heightControlSlider.minValue  = Globals.minHeight;
-        _controller.heightControlSlider.maxValue = Globals.maxHeight;
+        _controller.SetHeightLimits(Globals.minHeight, Globals.maxHeight);
 
-        _controller.speedControlSlider.minValue = Globals.minHorSpeed;
-        _controller.speedControlSlider.maxValue = Globals.maxHorSpeed;
+        _controller.SetSpeedLimits(Globals.minHorSpeed, Globals.maxHorSpeed);
     }
 
     // Update is called once per frame
     void Update()
     {
-        _controller.canvas.enabled = _controller.plane != null;
-        if (_controller.plane != null) {
+        bool shouldDoSomething = _controller.Plane != null && _controller.Plane.currentStatus == PlaneController.Status.Normal;
+        _controller.canvas.enabled = shouldDoSomething;
+        if (shouldDoSomething) {
+            if (shouldUpdateSliderValues) {
+                shouldUpdateSliderValues = false;
+                _controller.UpdateSliderValues();
+            }
             SetInformation();
-            _controller.plane.TargetHeight = _controller.heightControlSlider.value;
-            _controller.plane.Speed = _controller.speedControlSlider.value;
+            _controller.ReadAndUpdateValue();
+        } else {
+            shouldUpdateSliderValues = true;
         }
     }
 
     void SetInformation() {
-        _controller.planeName.text = _controller.plane.Name;
-        _controller.planeHeight.text =
-            $"Current Height: {_controller.plane.Height}\n" +
-            $"Target Height: {_controller.plane.TargetHeight}\n";
-        _controller.planeSpeed.text = $"Speed: {_controller.plane.Speed}";
-
-        if (_controller.plane.currentStatus == PlaneController.Status.Normal) {
+        _controller.UpdateTexts();
+    
+        if (_controller.Plane.currentStatus == PlaneController.Status.Normal) {
             _controller.planeStatus.text = "Normal Status";
             _controller.planeStatus.color = Color.white;
         } else {
@@ -45,17 +47,16 @@ public class UIController : MonoBehaviour
     }
 
     public PlaneController SelectedPlane {
-        get { return _controller.plane; }
+        get { return _controller.Plane; }
         set {
-            if (_controller.plane != null) {
-                _controller.plane.IsSelected = false;
+            if (_controller.Plane != null) {
+                _controller.Plane.IsSelected = false;
             }
-            _controller.plane = value;
+
+            _controller.Plane = value;
 
             if (value != null) {
-                _controller.plane.IsSelected = true;
-                _controller.heightControlSlider.value = value.Height;
-                _controller.speedControlSlider.value = value.Speed;
+                _controller.Plane.IsSelected = true;
             }
         }
     }
@@ -64,7 +65,7 @@ public class UIController : MonoBehaviour
 [System.Serializable]
 public class UIPlaneController {
     [HideInInspector]
-    public PlaneController plane;
+    private PlaneController plane;
     public Text planeName;
     public Text planeHeight;
     public Text planeSpeed;
@@ -72,4 +73,49 @@ public class UIPlaneController {
     public Slider speedControlSlider;
     public Slider heightControlSlider;
     public Canvas canvas;
+
+    public PlaneController Plane {
+        get { return plane; }
+        set {
+            plane = value;
+            if (value != null) {
+                UpdateSliderValues();
+            }
+        }
+    }
+
+    public void UpdateSliderValues() {
+        if (plane != null) {
+            speedControlSlider.value = plane.Speed;
+            heightControlSlider.value = plane.TargetHeight;
+        }
+    }
+
+    public void UpdateTexts() {
+        if (plane == null) {
+            return;
+        }
+        planeName.text = plane.Name;
+        planeHeight.text =
+            $"Current Height: {plane.Height}\n" +
+            $"Target Height: {plane.TargetHeight}\n";
+        planeSpeed.text = $"Speed: {plane.Speed}";
+    }
+
+    public void ReadAndUpdateValue() {
+        if (plane == null) {
+            return;
+        }
+        plane.TargetHeight = heightControlSlider.value;
+        plane.Speed = speedControlSlider.value;
+    }
+
+    public void SetSpeedLimits(float min, float max) {
+        speedControlSlider.minValue = Globals.minHorSpeed;
+        speedControlSlider.maxValue = Globals.maxHorSpeed;
+    }
+    public void SetHeightLimits(float min, float max) {
+        heightControlSlider.minValue  = Globals.minHeight;
+        heightControlSlider.maxValue = Globals.maxHeight;
+    }
 }
