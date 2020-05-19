@@ -36,4 +36,11 @@ public class Globals : MonoBehaviour
     public static float GetUniversalDistance(float distance, float height) {
         return Mathf.Sqrt(Mathf.Pow(ConvertToUniversal(distance), 2) + Mathf.Pow(height, 2));
     }
+
+    public static float GetHeightDifference(float height) {
+        if (TCASCameraController.SelectedPlane != null) {
+            return height - TCASCameraController.SelectedPlane.Height;
+        }
+        return height;
+    }
 }

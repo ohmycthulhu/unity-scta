@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class TCASCameraController : MonoBehaviour
 {
-    private PlaneController _selectedPlane;
+    private static PlaneController _selectedPlane;
 
     public Camera _sctaCamera;
 
@@ -65,7 +65,7 @@ public class TCASCameraController : MonoBehaviour
         PlaneController.ShowInfo = true;
     }
 
-    public PlaneController SelectedPlane {
+    public static PlaneController SelectedPlane {
         get { return _selectedPlane; }
         set {
             if (_selectedPlane != null) {

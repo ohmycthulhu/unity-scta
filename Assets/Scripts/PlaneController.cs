@@ -182,7 +182,11 @@ public class PlaneController : MonoBehaviour
             // Update information on text
             informationHolder.text = $"{Name}\nHeight: {Height}";
         } else {
-            informationHolder.text = "";
+            if (!_isFocused) {
+                informationHolder.text = Globals.FormatNumber(Globals.GetHeightDifference(mCurrentHeight)).ToString();
+            } else {
+                informationHolder.text = "";
+            }
         }
     }
 

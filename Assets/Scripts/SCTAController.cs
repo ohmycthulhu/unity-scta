@@ -34,7 +34,7 @@ public class SCTAController : IntervalWorkScript
             _firstPlaneController.ReadAndUpdateValue();
             _secondPlaneController.ReadAndUpdateValue();
 
-            _firstPlaneController.planeStatus.text = $"Distance: {(_possibleCollision.Distance)}";
+            _firstPlaneController.planeStatus.text = $"Distance: {(Globals.FormatNumber(_possibleCollision.Distance))}";
         }
     }
 
