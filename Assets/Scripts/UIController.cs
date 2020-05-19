@@ -26,7 +26,8 @@ public class UIController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        bool shouldDoSomething = _controller.Plane != null && _controller.Plane.currentStatus == PlaneController.Status.Normal;
+        bool shouldDoSomething = _controller.Plane != null
+            && _controller.Plane.currentStatus == PlaneController.Status.Normal;
         _controller.canvas.enabled = shouldDoSomething;
         if (shouldDoSomething) {
             if (shouldUpdateSliderValues) {
