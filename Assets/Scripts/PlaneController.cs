@@ -33,17 +33,26 @@ public class PlaneController : MonoBehaviour
     private int myId;
     private string _name;
 
-    private bool _isSelected = false;
+    public bool _isSelected = false, _isFocused = false;
+
+    private static bool _showInformation = true;
 
     public LineRenderer trajectoryLine;
     public Text informationHolder;
     public PlanePosition planePositions;
     public SCTAController _sctaController;
+
+    public Sprite _planeSCTASprite, _tcasFocusedSprite, _tcasCommonSprite;
+
     public float mSpeed, mVerticalSpeed;
     public float mDesiredHeight;
     private float mCurrentHeight;
 
     public float _lineMaxLength = 6.0f;
+
+    public Vector3 _sctaScale = new Vector3(3, 3, 3);
+    public Vector3 _tcasFocusedScale = new Vector3(3, 3, 3);
+    public Vector3 _tcasScale = new Vector3(1, 1, 1);
 
     public UIController uiController;
 
@@ -87,6 +96,9 @@ public class PlaneController : MonoBehaviour
 
         AdjustTrajectoryLine();
 
+        UpdateSprite();
+        AdjustScale();
+
         UpdateTexts();
 
         SetColor();
@@ -108,6 +120,28 @@ public class PlaneController : MonoBehaviour
 
         // Move object toward the destionation
         transform.position = Vector3.MoveTowards(transform.position, planePositions.destination, step);
+
+        if (_isFocused) {
+            // Rotate plane
+            transform.rotation = Quaternion.Euler(0.0f, 0.0f, -planePositions.TurnAngle);
+        } else {
+            // Disable rotation
+            transform.rotation = Quaternion.identity;
+        }
+
+    }
+
+    private void AdjustScale() {
+        if (_showInformation) {
+            transform.localScale = _sctaScale;
+        } else {
+            if (_isFocused) {
+                transform.localScale = _tcasFocusedScale;
+            }
+            else {
+                transform.localScale = _tcasScale;
+            }
+        }
     }
 
     private void ChangeHeight() {
@@ -131,6 +165,8 @@ public class PlaneController : MonoBehaviour
 
         // Set end position
         trajectoryLine.SetPosition(1, lineEnd / 2);
+
+        trajectoryLine.enabled = _showInformation;
     }
 
     private void EnableSCTA() {
@@ -142,8 +178,12 @@ public class PlaneController : MonoBehaviour
     }
 
     private void UpdateTexts() {
-        // Update information on text
-        informationHolder.text = $"{Name}\nHeight: {Height}";
+        if (_showInformation) {
+            // Update information on text
+            informationHolder.text = $"{Name}\nHeight: {Height}";
+        } else {
+            informationHolder.text = "";
+        }
     }
 
     private string GetRandomName() {
@@ -151,6 +191,18 @@ public class PlaneController : MonoBehaviour
         int number = Random.Range(100, 999);
 
         return $"{code} {number}";
+    }
+
+    private void UpdateSprite() {
+        if (_showInformation) {
+            mSpriteRenderer.sprite = _planeSCTASprite;
+        } else {
+            if (_isFocused) {
+                mSpriteRenderer.sprite = _tcasFocusedSprite;
+            } else {
+                mSpriteRenderer.sprite = _tcasCommonSprite;
+            }
+        }
     }
 
     private void SetColor() {
@@ -168,6 +220,9 @@ public class PlaneController : MonoBehaviour
 
     private Color CurrentColor {
         get {
+            if (_isFocused) {
+                return Color.yellow;
+            }
             if (_isSelected) {
                 return Color.green;
             }
@@ -214,6 +269,16 @@ public class PlaneController : MonoBehaviour
         }
     }
 
+    public static bool ShowInfo {
+        get { return _showInformation;  }
+        set { _showInformation = value;}
+    }
+
+    public bool IsFocused {
+        get { return _isFocused; }
+        set { _isFocused = value; }
+    }
+
     void OnMouseDown() {
         if (uiController) {
             if (uiController.SelectedPlane == this) {
@@ -230,4 +295,10 @@ public class PlaneController : MonoBehaviour
 public class PlanePosition {
     public Vector3 source;
     public Vector3 destination;
+
+    public float TurnAngle {
+        get {
+            return Vector3.Angle(new Vector3(0.0f, 1.0f), destination - source);
+        }
+    }
 }

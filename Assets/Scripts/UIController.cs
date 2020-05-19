@@ -7,6 +7,10 @@ public class UIController : MonoBehaviour
 {    
     public UIPlaneController _controller;
 
+    public Button _toTCASButton;
+
+    public TCASCameraController _tcasCamera;
+
     private bool shouldUpdateSliderValues = false;
 
     // Start is called before the first frame update
@@ -15,6 +19,8 @@ public class UIController : MonoBehaviour
         _controller.SetHeightLimits(Globals.minHeight, Globals.maxHeight);
 
         _controller.SetSpeedLimits(Globals.minHorSpeed, Globals.maxHorSpeed);
+
+        _toTCASButton.onClick.AddListener(GoToTCAS);
     }
 
     // Update is called once per frame
@@ -44,6 +50,13 @@ public class UIController : MonoBehaviour
             _controller.planeStatus.text = "Possible Collision!";
             _controller.planeStatus.color = Color.red;
         }        
+    }
+
+    void GoToTCAS() {
+        if (_controller.Plane == null) {
+            return;
+        }
+        _tcasCamera.Enable(_controller.Plane);
     }
 
     public PlaneController SelectedPlane {

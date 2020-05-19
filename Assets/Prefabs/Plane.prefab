@@ -275,16 +275,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b787591bfee6cea73a3eb35e2616ecfd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _isSelected: 0
+  _isFocused: 0
   trajectoryLine: {fileID: 2687492799272765233}
   informationHolder: {fileID: 1392152030}
   planePositions:
     source: {x: 0, y: 0, z: 0}
-    destination: {x: 5, y: 5, z: 0}
+    destination: {x: 0, y: 5, z: 0}
   _sctaController: {fileID: 0}
+  _planeSCTASprite: {fileID: 21300000, guid: 4dc7a7a1ba45de1dd9a07f8b19c099cc, type: 3}
+  _tcasFocusedSprite: {fileID: 21300000, guid: 02c1a26c4554b1846a054287931ced43, type: 3}
+  _tcasCommonSprite: {fileID: 21300000, guid: 4dc7a7a1ba45de1dd9a07f8b19c099cc, type: 3}
   mSpeed: 0
   mVerticalSpeed: 5
   mDesiredHeight: 10
   _lineMaxLength: 6
+  _sctaScale: {x: 3, y: 3, z: 3}
+  _tcasFocusedScale: {x: 3, y: 3, z: 3}
+  _tcasScale: {x: 1, y: 1, z: 1}
   uiController: {fileID: 0}
   destroyOnDestination: 1
   currentStatus: 4

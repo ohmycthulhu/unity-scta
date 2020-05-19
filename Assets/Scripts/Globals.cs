@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Globals : MonoBehaviour
 {
-    public const float minHorSpeed = 0.5f;
+    public const float minHorSpeed = 0f;
     public const float maxHorSpeed = 10.0f;
 
     public const float minVerSpeed = .7f;

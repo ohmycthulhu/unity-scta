@@ -52,6 +52,7 @@
      <Compile Include="Assets\Scripts\PlaneController.cs" />
      <Compile Include="Assets\Scripts\SCTAController.cs" />
      <Compile Include="Assets\Scripts\SimulatorController.cs" />
+     <Compile Include="Assets\Scripts\TCASCameraController.cs" />
      <Compile Include="Assets\Scripts\TCASController.cs" />
      <Compile Include="Assets\Scripts\UIController.cs" />
  <Reference Include="UnityEngine">

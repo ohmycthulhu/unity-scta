@@ -10,7 +10,7 @@ public class CollisionDetector : IntervalWorkScript
     // Start is called before the first frame update
     void Start()
     {
-        
+        ErrorMessagesCanvas.enabled = false;
     }
 
     // Update is called once per frame
