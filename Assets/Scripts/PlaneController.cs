@@ -121,20 +121,23 @@ public class PlaneController : MonoBehaviour
         // Move object toward the destionation
         transform.position = Vector3.MoveTowards(transform.position, planePositions.destination, step);
 
-        if (_isFocused) {
-            // Rotate plane
-            transform.rotation = Quaternion.Euler(0.0f, 0.0f, -planePositions.TurnAngle);
+        Quaternion rotation;
+        if (_showInformation) {
+            rotation = Quaternion.identity;
         } else {
-            // Disable rotation
-            transform.rotation = Quaternion.identity;
+            float zAngle = _isFocused ? -planePositions.TurnAngle : Globals.GetTurnAngle();
+            rotation = Quaternion.Euler(0, 0, zAngle);
         }
 
+        transform.rotation = rotation;
     }
 
     private void AdjustScale() {
         if (_showInformation) {
             transform.localScale = _sctaScale;
+            informationHolder.transform.localScale = new Vector3(1, 1, 1);
         } else {
+            informationHolder.transform.localScale = new Vector3(.5f, .5f, .5f);
             if (_isFocused) {
                 transform.localScale = _tcasFocusedScale;
             }
@@ -178,12 +181,15 @@ public class PlaneController : MonoBehaviour
     }
 
     private void UpdateTexts() {
+        informationHolder.color = Color.white;
         if (_showInformation) {
             // Update information on text
             informationHolder.text = $"{Name}\nHeight: {Height}";
         } else {
             if (!_isFocused) {
-                informationHolder.text = Globals.FormatNumber(Globals.GetHeightDifference(mCurrentHeight)).ToString();
+                float number = Globals.FormatNumber(Globals.GetHeightDifference(mCurrentHeight));
+                informationHolder.text = $"{(number >= 0 ? "↑" : "↓")}{number}";
+                informationHolder.color = number >= 0 ? Color.green : Color.cyan;
             } else {
                 informationHolder.text = "";
             }
@@ -284,6 +290,10 @@ public class PlaneController : MonoBehaviour
     }
 
     void OnMouseDown() {
+        if (!_showInformation) {
+            EnableSCTA();
+            return;
+        }
         if (uiController) {
             if (uiController.SelectedPlane == this) {
                 uiController.SelectedPlane = null;

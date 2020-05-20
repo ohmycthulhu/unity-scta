@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Globals : MonoBehaviour
 {
-    public const float minHorSpeed = 0f;
+    public const float minHorSpeed = 1f;
     public const float maxHorSpeed = 10.0f;
 
     public const float minVerSpeed = .7f;
@@ -42,5 +42,12 @@ public class Globals : MonoBehaviour
             return height - TCASCameraController.SelectedPlane.Height;
         }
         return height;
+    }
+
+    public static float GetTurnAngle() {
+        if (TCASCameraController.SelectedPlane != null) {
+            return -TCASCameraController.SelectedPlane.planePositions.TurnAngle;
+        }
+        return 0;
     }
 }
