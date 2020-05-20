@@ -122,6 +122,8 @@ public class PlaneController : MonoBehaviour
         transform.position = Vector3.MoveTowards(transform.position, planePositions.destination, step);
 
         Quaternion rotation;
+        
+        // If TCAS mode is enabled, then rotate plane
         if (_showInformation) {
             rotation = Quaternion.identity;
         } else {
@@ -133,6 +135,7 @@ public class PlaneController : MonoBehaviour
     }
 
     private void AdjustScale() {
+        // Change the scale of plane based on the state of plane
         if (_showInformation) {
             transform.localScale = _sctaScale;
             informationHolder.transform.localScale = new Vector3(1, 1, 1);
@@ -180,6 +183,7 @@ public class PlaneController : MonoBehaviour
         return IsSelected && currentStatus == Status.NearCollision;
     }
 
+    // Update color and text content based on several conditions
     private void UpdateTexts() {
         informationHolder.color = Color.white;
         if (_showInformation) {
@@ -196,6 +200,7 @@ public class PlaneController : MonoBehaviour
         }
     }
 
+    // Generating random name for assignings
     private string GetRandomName() {
         string code = availableNames[Random.Range(0, availableNames.Length)];
         int number = Random.Range(100, 999);
@@ -203,25 +208,33 @@ public class PlaneController : MonoBehaviour
         return $"{code} {number}";
     }
 
+    // Update sprite based on several conditions
     private void UpdateSprite() {
-        if (_showInformation) {
-            mSpriteRenderer.sprite = _planeSCTASprite;
-        } else {
-            if (_isFocused) {
-                mSpriteRenderer.sprite = _tcasFocusedSprite;
-            } else {
-                mSpriteRenderer.sprite = _tcasCommonSprite;
-            }
-        }
+        Sprite s = _showInformation ? _planeSCTASprite : (_isFocused ? _tcasFocusedSprite : _tcasCommonSprite);
+        mSpriteRenderer.sprite = s;
     }
 
+    // Update colors base on current color
     private void SetColor() {
         mSpriteRenderer.color = CurrentColor;
         informationHolder.color = CurrentColor;
         trajectoryLine.startColor = CurrentColor;
         trajectoryLine.endColor = CurrentColor;
-    }    
+    }
 
+    // On clicking object, select or unselect the plane
+    void OnMouseDown() {
+        if (uiController) {
+            if (uiController.SelectedPlane == this) {
+                uiController.SelectedPlane = null;
+            } else {
+                uiController.SelectedPlane = this;
+            }
+        }
+    }
+
+
+    // Getters and setters for comfortable using of component
     public string Name {
         get {
             return _name;
@@ -230,6 +243,7 @@ public class PlaneController : MonoBehaviour
 
     private Color CurrentColor {
         get {
+            // Return color based on whether it is in focus, is selected and its status
             if (_isFocused) {
                 return Color.yellow;
             }
@@ -239,7 +253,6 @@ public class PlaneController : MonoBehaviour
             return colors[currentStatus];
         }
     }
-
 
     public float Height {
         get {
@@ -288,23 +301,10 @@ public class PlaneController : MonoBehaviour
         get { return _isFocused; }
         set { _isFocused = value; }
     }
-
-    void OnMouseDown() {
-        if (!_showInformation) {
-            EnableSCTA();
-            return;
-        }
-        if (uiController) {
-            if (uiController.SelectedPlane == this) {
-                uiController.SelectedPlane = null;
-            } else {
-                uiController.SelectedPlane = this;
-            }
-        }
-    }
 }
 
 
+// Plane position class is containing source and destination positions
 [System.Serializable]
 public class PlanePosition {
     public Vector3 source;

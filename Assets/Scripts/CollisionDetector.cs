@@ -4,13 +4,15 @@ using UnityEngine;
 
 public class CollisionDetector : IntervalWorkScript
 {
-    public Canvas ErrorMessagesCanvas;
+    [Tooltip("Error Canvas with text to display on Collisions")]
+    public Canvas _errorMessagesCanvas;
     private List<PossibleCollision> _possibleCollisions = new List<PossibleCollision>();
 
     // Start is called before the first frame update
     void Start()
     {
-        ErrorMessagesCanvas.enabled = false;
+        // Disable error canvas
+        _errorMessagesCanvas.enabled = false;
     }
 
     // Update is called once per frame
@@ -43,17 +45,15 @@ public class CollisionDetector : IntervalWorkScript
             }
         }
 
-        // Log
-        // foreach (var p in collisions) {
-        //  //   Debug.Log($"Collision posibility! {p.first.Name} - {p.second.Name}");
-        // }
-
+        // Update collisions list
         UpdateCollisionsList(collisions);
 
-        ErrorMessagesCanvas.enabled = ShouldShowErrors();
+        // If needed, show error canvas
+        _errorMessagesCanvas.enabled = ShouldShowErrors();
     }
 
     private bool ShouldShowErrors() {
+        // If there is a collision that is not under any control, show error
         foreach (var collision in _possibleCollisions) {
             if (collision.controlMode == ControlMode.None) {
                 return true;
@@ -76,6 +76,7 @@ public class CollisionDetector : IntervalWorkScript
 
     private void ClearCollisionsList() {
         foreach (var collision in _possibleCollisions) {
+            // Return planes in Normal status before removing from collisions list
             if (collision.first != null) {
                 collision.first.currentStatus = PlaneController.Status.Normal;
             }
@@ -83,14 +84,17 @@ public class CollisionDetector : IntervalWorkScript
                 collision.second.currentStatus = PlaneController.Status.Normal;
             }
         }
+        _possibleCollisions.Clear();
     }
 
     public void SetCollisionsList(List<PossibleCollision> collisions, bool clear = false) {
         if (clear) {
             ClearCollisionsList();
         }
+        
         _possibleCollisions = collisions;
         
+        // Update every plane's status
         foreach (var collision in _possibleCollisions) {
             UpdatePlaneStates(collision);
         }
@@ -103,6 +107,8 @@ public class CollisionDetector : IntervalWorkScript
     }
 
     public PossibleCollision FindAndSetToSCTAMode (PossibleCollision collision) {
+        // Iterate over all collisions, if there is collision between presented planes
+        // Set mode to STCA and return the result
         for (int i = 0; i < _possibleCollisions.Count; i++) {
             if (_possibleCollisions[i].first == collision.first
             && _possibleCollisions[i].second == collision.second) {
@@ -119,6 +125,8 @@ public class CollisionDetector : IntervalWorkScript
             return null;
         }
 
+        // Check if there is collision with the presented planes and in STCA mode
+        // And return it no None mode
         for (int i = 0; i < _possibleCollisions.Count; i++) {
             if (_possibleCollisions[i].first == collision.first
             && _possibleCollisions[i].second == collision.second
@@ -151,13 +159,14 @@ public class CollisionDetector : IntervalWorkScript
     }
 
     bool isDistanceSafe(PlaneController p1, PlaneController p2) {
+        // If distance between planes, without height, is more than minimal, then it is safe
         float distance = Vector3.Distance(p1.transform.position, p2.transform.position);
         if (distance >= Globals.minSafeDistance) {
             return true;
         }
 
+        // Normalize and check the values
         float heightDiff = Mathf.Abs(p1.Height - p2.Height);
-
         return (new Vector2(heightDiff / Globals.minSafeHeightDifference, distance / Globals.minSafeDistance)).magnitude >= 1.0f;
     }
 
@@ -203,6 +212,7 @@ public class PossibleCollision{
         controlMode = mode;
     }
 
+    // Function that converts current Control Mode to PlaneController.Status
     public PlaneController.Status ControlModeToStatus() {
         if (first.currentStatus == PlaneController.Status.STCAControlled
             || second.currentStatus == PlaneController.Status.STCAControlled
@@ -219,6 +229,7 @@ public class PossibleCollision{
         }
     }
 
+    // The distance between planes
     public float Distance {
         get {
             if (first == null || second == null) {

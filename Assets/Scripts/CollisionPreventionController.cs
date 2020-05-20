@@ -4,16 +4,9 @@ using UnityEngine;
 
 public class CollisionPreventionController : IntervalWorkScript
 {
-
     public SCTAController _scta;
     public TCASController _tcas;
     public CollisionDetector _CollisionDetector;
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
 
     // Update is called once per frame
     protected override void UpdateAction()
@@ -30,6 +23,7 @@ public class CollisionPreventionController : IntervalWorkScript
     }
 
     ControlMode GetControlModeForCollision(PossibleCollision collision) {
+        // If collision is not already in TCAS mode and time limit exceeds, then switch to TCAS mode
         if (collision.controlMode != ControlMode.TCAS && ShouldSwitchToTCAS(collision)) {
             return ControlMode.TCAS;
         }

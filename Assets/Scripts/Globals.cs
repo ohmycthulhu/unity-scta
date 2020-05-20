@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// Class is used to store constants that define simulation speed and behaviour
 public class Globals : MonoBehaviour
 {
     public const float minHorSpeed = 1f;
@@ -18,6 +19,7 @@ public class Globals : MonoBehaviour
     public const float minSafeDistance = 10.0f;
     public const float minSafeHeightDifference = 5.0f;
 
+    // Dictionary for matching ControlMode with PlaneController.Status
     public static Dictionary<ControlMode, PlaneController.Status> ControlModeToStatus = new Dictionary<ControlMode, PlaneController.Status>() {
         { ControlMode.None, PlaneController.Status.NearCollision },
         { ControlMode.STCA, PlaneController.Status.STCAControlled },
@@ -29,15 +31,18 @@ public class Globals : MonoBehaviour
     }
 
     public static float ConvertToUniversal(float distance) {
-        // Convert distance to match height distance and add height
+        // Convert distance to match height distance
         return distance / minSafeDistance * minSafeHeightDifference;
     }
 
     public static float GetUniversalDistance(float distance, float height) {
-        return Mathf.Sqrt(Mathf.Pow(ConvertToUniversal(distance), 2) + Mathf.Pow(height, 2));
+        // Convert distance to universal and find distance in universal unit
+        float distanceInUniversal = ConvertToUniversal(distance);
+        return Mathf.Sqrt(Mathf.Pow(distanceInUniversal, 2) + Mathf.Pow(height, 2));
     }
 
     public static float GetHeightDifference(float height) {
+        // If camera is in TCAS mode, return difference between heights
         if (TCASCameraController.SelectedPlane != null) {
             return height - TCASCameraController.SelectedPlane.Height;
         }
@@ -45,6 +50,7 @@ public class Globals : MonoBehaviour
     }
 
     public static float GetTurnAngle() {
+        // If camera is in TCAS mode, return turn angle of plane
         if (TCASCameraController.SelectedPlane != null) {
             return -TCASCameraController.SelectedPlane.planePositions.TurnAngle;
         }

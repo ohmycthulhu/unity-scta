@@ -13,6 +13,7 @@ public class SCTAController : IntervalWorkScript
     // Start is called before the first frame update
     void Start()
     {
+        // Set limits for ui controllers
         _firstPlaneController.SetHeightLimits(Globals.minHeight, Globals.maxHeight);
         _firstPlaneController.SetSpeedLimits(Globals.minHorSpeed, Globals.maxHorSpeed);
 
@@ -22,10 +23,12 @@ public class SCTAController : IntervalWorkScript
 
     protected override void Update() {
         base.Update();
+
+        // If there is not selected collision, just hide canvases
         bool shouldShowPanels = _possibleCollision != null;
-        
-        _firstPlaneController.canvas.enabled = shouldShowPanels;
-        _secondPlaneController.canvas.enabled = shouldShowPanels;
+    
+        _firstPlaneController._canvas.enabled = shouldShowPanels;
+        _secondPlaneController._canvas.enabled = shouldShowPanels;
 
         if (shouldShowPanels) {
             _firstPlaneController.UpdateTexts();
@@ -34,7 +37,7 @@ public class SCTAController : IntervalWorkScript
             _firstPlaneController.ReadAndUpdateValue();
             _secondPlaneController.ReadAndUpdateValue();
 
-            _firstPlaneController.planeStatus.text = $"Distance: {(Globals.FormatNumber(_possibleCollision.Distance))}";
+            _firstPlaneController._planeStatus.text = $"Distance: {(Globals.FormatNumber(_possibleCollision.Distance))}";
         }
     }
 
@@ -52,6 +55,7 @@ public class SCTAController : IntervalWorkScript
     }
 
     public void ClearSelection() {
+        // For clearing, remove STCA mode from collision
         if (_possibleCollision == null) {
             return;
         }
@@ -82,6 +86,7 @@ public class SCTAController : IntervalWorkScript
         _possibleCollision = collision;
     }
     public void TakeControlOfCollision(PlaneController plane) {
+        // Find collision by plane and get control by collission
         PossibleCollision collision = _collisionDetector.FindCollision(plane);
         if (collision == null) {
             return;

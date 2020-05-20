@@ -224,13 +224,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _controller:
-    planeName: {fileID: 1408838884}
-    planeHeight: {fileID: 1637629310}
-    planeSpeed: {fileID: 1454711913}
-    planeStatus: {fileID: 309297447}
-    speedControlSlider: {fileID: 289666326}
-    heightControlSlider: {fileID: 1248458837}
-    canvas: {fileID: 2064564438}
+    _planeName: {fileID: 1408838884}
+    _planeHeight: {fileID: 1637629310}
+    _planeSpeed: {fileID: 1454711913}
+    _planeStatus: {fileID: 309297447}
+    _speedControlSlider: {fileID: 289666326}
+    _heightControlSlider: {fileID: 1248458837}
+    _canvas: {fileID: 2064564438}
   _toTCASButton: {fileID: 654015020}
   _tcasCamera: {fileID: 1081195199}
 --- !u!4 &48356197
@@ -1941,14 +1941,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c549f508c2343c7899fc7db42e71bf13, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  viewCamera: {fileID: 1229053542}
-  planePrefab: {fileID: 2687492799184703942, guid: c155a63142b65ea60bcd849af6afb166,
+  _viewCamera: {fileID: 1229053542}
+  _planesCount: 0
+  _planes: []
+  _planePrefab: {fileID: 2687492799184703942, guid: c155a63142b65ea60bcd849af6afb166,
     type: 3}
-  uiController: {fileID: 48356196}
-  sctaController: {fileID: 1411328937}
-  planes: []
-  planesCount: 3
-  timeBetweenGeneration: 2
+  _uiController: {fileID: 48356196}
+  _sctaController: {fileID: 1411328937}
+  _timeBetweenGeneration: 2
 --- !u!4 &752088897
 Transform:
   m_ObjectHideFlags: 0
@@ -3251,21 +3251,21 @@ MonoBehaviour:
   _workStep: 0.5
   _collisionDetector: {fileID: 1926247498}
   _firstPlaneController:
-    planeName: {fileID: 49343751}
-    planeHeight: {fileID: 96627508}
-    planeSpeed: {fileID: 1483353283}
-    planeStatus: {fileID: 332359926}
-    speedControlSlider: {fileID: 1664222419}
-    heightControlSlider: {fileID: 1770334338}
-    canvas: {fileID: 815321724}
+    _planeName: {fileID: 49343751}
+    _planeHeight: {fileID: 96627508}
+    _planeSpeed: {fileID: 1483353283}
+    _planeStatus: {fileID: 332359926}
+    _speedControlSlider: {fileID: 1664222419}
+    _heightControlSlider: {fileID: 1770334338}
+    _canvas: {fileID: 815321724}
   _secondPlaneController:
-    planeName: {fileID: 1763480991}
-    planeHeight: {fileID: 2013508144}
-    planeSpeed: {fileID: 304255447}
-    planeStatus: {fileID: 332359926}
-    speedControlSlider: {fileID: 2108111177}
-    heightControlSlider: {fileID: 2117250835}
-    canvas: {fileID: 815321724}
+    _planeName: {fileID: 1763480991}
+    _planeHeight: {fileID: 2013508144}
+    _planeSpeed: {fileID: 304255447}
+    _planeStatus: {fileID: 332359926}
+    _speedControlSlider: {fileID: 2108111177}
+    _heightControlSlider: {fileID: 2117250835}
+    _canvas: {fileID: 815321724}
 --- !u!1 &1447198942
 GameObject:
   m_ObjectHideFlags: 0
@@ -4300,7 +4300,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _workStep: 0.5
-  ErrorMessagesCanvas: {fileID: 894990975}
+  _errorMessagesCanvas: {fileID: 894990975}
 --- !u!114 &1926247499
 MonoBehaviour:
   m_ObjectHideFlags: 0

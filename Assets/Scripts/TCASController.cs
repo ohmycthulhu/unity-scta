@@ -18,8 +18,8 @@ public class TCASController : IntervalWorkScript
 
     // Late update is called after all updates are called
     protected override void UpdateAction() {
+        // Get possible collisions list and perform step on every plane in TCAS mode
         List<PossibleCollision> possibleCollisions = _collisionDetector.PossibleCollisions;
-
         foreach (var collision in possibleCollisions) {
             if (collision.controlMode == ControlMode.TCAS) {
                 PerformTCASStep(collision);

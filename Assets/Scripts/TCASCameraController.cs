@@ -11,7 +11,6 @@ public class TCASCameraController : MonoBehaviour
 
     public Button _sctaCameraButton;
 
-
     public Canvas _tcasCanvas;
 
     private Camera _camera;
@@ -28,33 +27,36 @@ public class TCASCameraController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        // If the camera is in TCAS mode, but it shouldn't be, then disable the camera
         if (_camera.isActiveAndEnabled && _selectedPlane == null) {
             Disable();
             return;
         }
         if (_selectedPlane != null) {
-            // Vector3 p = _selectedPlane.transform.position;
+            // Move and rotate camera toward the plane
+            // And add move little too much, so plane will be in the start 
             Vector3 currentPos = _selectedPlane.transform.position;
             Vector3 move = _planeOffset * _selectedPlane.transform.up;
             Vector3 p = currentPos + move;
 
             float angle = _selectedPlane.planePositions.TurnAngle;
-            // float dX = _planeOffset * Mathf.Sin(angle), dY = _planeOffset * Mathf.Cos(angle);
-            // transform.position = new Vector3(p.x + dX, p.y + dY, transform.position.z);
             transform.position = new Vector3(p.x, p.y, transform.position.z);
             transform.rotation = _selectedPlane.transform.rotation;
         }
     }
 
     public void Enable(PlaneController plane) {
+        // Assign plane, disable all cameras and enable the needed one
         SelectedPlane = plane;
         _tcasCanvas.enabled = true;
         Camera.main.enabled = false;
         _camera.enabled = true;
+        // Also switch planes to TCAS radar mode
         PlaneController.ShowInfo = false;
     }
 
     public void Disable() {
+        // Disable current camera and enable SCTA camera
         if (Camera.main != null) {
             Camera.main.enabled = false;
         }
@@ -62,6 +64,8 @@ public class TCASCameraController : MonoBehaviour
         _sctaCamera.enabled = true;
         SelectedPlane = null;
         _tcasCanvas.enabled = false;
+
+        // Switch planes back to normal state
         PlaneController.ShowInfo = true;
     }
 
